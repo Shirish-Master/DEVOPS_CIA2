@@ -46,7 +46,7 @@ app.get('/', (req, res) => {
     </head>
     <body>
       <div class="container">
-        <h1>Hi, I am Shirish Shyam Sundar Y</h1>
+        <h1>Hi, I am Shirish</h1>
         <p>Welcome to my sample web page!</p>
       </div>
     </body>
