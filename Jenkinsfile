@@ -33,23 +33,17 @@ pipeline {
         }
         
         stage('Build') {
-            steps {
-                script {
-                    echo '==================== Building the Application ===================='
-                    // For Node.js application
-                    sh '''
-                        npm install
-                        npm run build
-                    '''
-                    
-                    // For Maven/Java application, use:
-                    // sh 'mvn clean package'
-                    
-                    // For Python application, use:
-                    // sh 'pip install -r requirements.txt'
-                }
-            }
+    steps {
+        script {
+            echo '==================== Installing Dependencies ===================='
+            sh '''
+                npm install
+                # npm run build  <-- removed since not needed
+            '''
         }
+    }
+}
+
         
         stage('Test') {
             steps {
