@@ -32,50 +32,20 @@ pipeline {
             }
         }
         
-        stage('Build') {
-    steps {
-        script {
-            echo '==================== Installing Dependencies ===================='
-            sh '''
-                npm install
-                # npm run build  <-- removed since not needed
-            '''
-        }
-    }
-}
-
-        
-        stage('Test') {
+        stage('Install Dependencies') {
             steps {
                 script {
-                    echo '==================== Running Tests ===================='
-                    // For Node.js
-                    sh 'npm test'
-                    
-                    // For Maven/Java, use:
-                    // sh 'mvn test'
-                    
-                    // For Python, use:
-                    // sh 'pytest tests/'
-                }
-            }
-            post {
-                always {
-                    // Publish test results
-                    junit '**/test-results/*.xml'
+                    echo '==================== Installing Dependencies ===================='
+                    sh 'npm install'
                 }
             }
         }
-        
+
         stage('Code Quality Analysis') {
             steps {
                 script {
                     echo '==================== Running Code Quality Checks ===================='
-                    // Example: ESLint for Node.js
                     sh 'npm run lint || true'
-                    
-                    // For SonarQube analysis (optional)
-                    // sh 'sonar-scanner'
                 }
             }
         }
@@ -100,10 +70,9 @@ pipeline {
                     withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', 
                                     credentialsId: "${AWS_CREDENTIALS}"]]) {
                         sh """
-                            # Login to ECR
-                            aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
+                            aws ecr get-login-password --region ${AWS_REGION} \
+                            | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
                             
-                            # Push images
                             docker push ${DOCKER_IMAGE}:${IMAGE_TAG}
                             docker push ${DOCKER_IMAGE}:latest
                         """
@@ -121,20 +90,16 @@ pipeline {
                                    sshUserPrivateKey(credentialsId: 'ec2-ssh-key', 
                                                     keyFileVariable: 'SSH_KEY')]) {
                         sh """
-                            # SSH into EC2 and deploy
                             ssh -o StrictHostKeyChecking=no -i \$SSH_KEY ${EC2_USER}@${EC2_HOST} << 'EOF'
-                                # Login to ECR
-                                aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
+                                aws ecr get-login-password --region ${AWS_REGION} \
+                                | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
                                 
-                                # Stop and remove old container
                                 docker stop my-web-app || true
                                 docker rm my-web-app || true
                                 
-                                # Pull and run new container
                                 docker pull ${DOCKER_IMAGE}:${IMAGE_TAG}
                                 docker run -d --name my-web-app -p 80:3000 ${DOCKER_IMAGE}:${IMAGE_TAG}
                                 
-                                # Clean up old images
                                 docker image prune -f
 EOF
                         """
@@ -193,7 +158,6 @@ EOF
         }
         
         always {
-            // Clean up workspace
             cleanWs()
         }
     }
