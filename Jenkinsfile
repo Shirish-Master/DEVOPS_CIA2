@@ -3,16 +3,16 @@ pipeline {
     
     environment {
         // AWS Configuration
-        AWS_ACCOUNT_ID = '801367894798'  // Replace with your AWS Account ID
+        AWS_ACCOUNT_ID = '701893741052'  // Replace with your AWS Account ID
         AWS_REGION = 'ap-south-1'
-        ECR_REPOSITORY = 'my-web-app'
+        ECR_REPOSITORY = 'my-simple-app'
         
         // Docker Configuration
         DOCKER_IMAGE = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPOSITORY}"
         IMAGE_TAG = "${BUILD_NUMBER}"
         
         // Deployment Configuration
-        EC2_HOST = 'ec2-3-108-9-207.ap-south-1.compute.amazonaws.com'  // Replace with your EC2 public DNS
+        EC2_HOST = 'ec2-18-60-47-175.ap-south-2.compute.amazonaws.com'  // Replace with your EC2 public DNS
         EC2_USER = 'ec2-user'
         
         // AWS Credentials (configured in Jenkins)
