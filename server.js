@@ -10,7 +10,7 @@ app.get('/', (req, res) => {
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Hi, I am Shirish Shyam</title>
+      <title>Hi, I am Shirish</title>
       <style>
         body {
           margin: 0;
@@ -46,7 +46,7 @@ app.get('/', (req, res) => {
     </head>
     <body>
       <div class="container">
-        <h1>Hi, I am Shirish Shyam</h1>
+        <h1>Hi, I am Shirish Shyam Sundar Y</h1>
         <p>Welcome to my sample web page!</p>
       </div>
     </body>
